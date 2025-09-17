@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring基础 on Lay-z&#39;s Blog</title>
+    <link>http://localhost:50919/frameworks/spring/spring/</link>
+    <description>Recent content in Spring基础 on Lay-z&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <copyright>Copyright (c) 2020-2024 Thulite</copyright>
+    <lastBuildDate>Thu, 07 Sep 2023 16:04:48 +0200</lastBuildDate>
+    <atom:link href="http://localhost:50919/frameworks/spring/spring/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Spring框架概述</title>
+      <link>http://localhost:50919/frameworks/spring/spring/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0-/</link>
+      <pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate>
+      <guid>http://localhost:50919/frameworks/spring/spring/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0-/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

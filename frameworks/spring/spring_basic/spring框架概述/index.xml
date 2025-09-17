@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Guides on Lay-z&#39;s Blog</title>
+    <link>http://localhost:1313/frameworks/spring/spring_basic/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0/</link>
+    <description>Recent content in Guides on Lay-z&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <copyright>Copyright (c) 2020-2024 Thulite</copyright>
+    <lastBuildDate>Thu, 07 Sep 2023 16:04:48 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/frameworks/spring/spring_basic/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Spring概述</title>
+      <link>http://localhost:1313/frameworks/spring/spring_basic/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0/</link>
+      <pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate>
+      <guid>http://localhost:1313/frameworks/spring/spring_basic/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0/</guid>
+      <description>&lt;h1 id=&#34;一spring概述&#34;&gt;一、Spring概述&lt;/h1&gt;&#xA;&lt;p&gt;什么是框架？框架就是多个可重用模块的集合，形成一个某个领域的整体解决&lt;/p&gt;&#xA;&lt;p&gt;Spring框架是一个开源的容器框架。为什么叫容器？因为Spring可以管理所有的组件(类)。&lt;/p&gt;&#xA;&lt;p&gt;Spring的jar包三个为一组，javadoc中包含相关文档，sources是Spring源码&lt;/p&gt;&#xA;&lt;p&gt;Spring的优良特性&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;非侵入式：基于Spring开发的应用中的对象可以不依赖于Spring的API&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;依赖注入：DI，IOC最经典的实现&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;面向切面编程：AOP&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;容器：Spring是一个容器，因为它包含并且管理应用对象的生命周期&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;组件化：Spring实现了使用简单的组件配置组合成一个复杂的应用，在Spring中可以使用XML和Java注解组合这些对象&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;一站式：在IOC和AOP的基础上可以整合各种企业应用的开源框架和第三方类库。从前到后，从页面到数据库都有支持&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h1 id=&#34;二spring的模块划分&#34;&gt;二、Spring的模块划分&lt;/h1&gt;&#xA;&lt;p&gt;Spring框架采用分层架构，根据不同的功能被划分成了多个模块，这些模块可以满足一切企业级应用开发的需求，在开发过程中可以根据需求有选择性地使用所需要的模块。&lt;/p&gt;&#xA;&lt;p&gt;**Test：**Spring的单元测试&lt;/p&gt;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;div class=&#34;expressive-code&#34;&gt;&#xD;&#xA;  &lt;figure class=&#34;frame not-content&#34;&gt;&#xD;&#xA;  &lt;figcaption class=&#34;header&#34;&gt;&#xD;&#xA;    &lt;span class=&#34;title&#34;&gt;&lt;/span&gt;&#xD;&#xA;  &lt;/figcaption&gt;&#xD;&#xA;  &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;spring-test-5.2.6.RELEASE.jar&lt;/code&gt;&lt;/pre&gt;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/div&gt;&#xD;&#xA;&lt;p&gt;&lt;strong&gt;Core Container：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;核心容器IOC，这些功能由以下jar包组成，如果要使用这部分功能，需要把这些jar包全部导入&lt;/p&gt;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&lt;div class=&#34;expressive-code&#34;&gt;&#xD;&#xA;  &lt;figure class=&#34;frame not-content&#34;&gt;&#xD;&#xA;  &lt;figcaption class=&#34;header&#34;&gt;&#xD;&#xA;    &lt;span class=&#34;title&#34;&gt;&lt;/span&gt;&#xD;&#xA;  &lt;/figcaption&gt;&#xD;&#xA;  &lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;spring-beans-5.2.6.RELEASE.jar&#xD;&#xA;spring-core-5.2.6.RELEASE.jar&#xD;&#xA;spring-context-5.2.6.RELEASE.jar&#xD;&#xA;spring-expression-5.2.6.RELEASE.jar&lt;/code&gt;&lt;/pre&gt;&#xD;&#xA;  &lt;/figure&gt;&#xD;&#xA;&lt;/div&gt;&#xD;&#xA;&lt;p&gt;**AOP+Aspects：**面向切面编程&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
