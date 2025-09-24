@@ -1,0 +1,599 @@
+<!doctype html><html lang=en data-bs-theme=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=preload href=/fonts/vendor/jost/jost-v4-latin-regular.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/vendor/jost/jost-v4-latin-500.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=/fonts/vendor/jost/jost-v4-latin-700.woff2 as=font type=font/woff2 crossorigin><script src=/js/color-mode.86a91f050a481d0a3f0c72ac26543cb6228c770875981c58dcbc008fd3f875c8.js integrity="sha256-hqkfBQpIHQo/DHKsJlQ8tiKMdwh1mBxY3LwAj9P4dcg="></script><link rel=stylesheet href="/main.ec1b0749e15e841a53658819aa9254f4f16260a551162d95ed6e0a8c68cd8b247ff7a98988364d843af38266c38e8deb5143be54cb5a1c19e529873d266fb541.css" integrity="sha512-7BsHSeFehBpTZYgZqpJU9PFiYKVRFi2V7W4KjGjNiyR/96mJiDZNhDrzgmbDjo3rUUO+VMtaHBnlKYc9Jm+1QQ==" crossorigin=anonymous><noscript><style>img.lazyload{display:none}</style></noscript><base href=/frameworks/spring/spring_basic/spring-aop/><link rel=canonical href=/frameworks/spring/spring_basic/spring-aop/><title>Spring AOP | Lay-z's Blog</title><meta name=description content="Congrats on setting up a new Doks project!"><link rel=icon href=/favicon.ico sizes=32x32><link rel=icon href=/favicon.svg type=image/svg+xml><link rel=apple-touch-icon href=/apple-touch-icon.png sizes=180x180 type=image/png><link rel=icon href=/favicon-192x192.png sizes=192x192 type=image/png><link rel=icon href=/favicon-512x512.png sizes=512x512 type=image/png><link rel=manifest href=/manifest.webmanifest><meta property="og:url" content="/frameworks/spring/spring_basic/spring-aop/"><meta property="og:site_name" content="Lay-z's Blog"><meta property="og:title" content="Spring AOP"><meta property="og:description" content='一、什么是AOP？ AOP(Aspect Oriented Programming)指的是面向切面编程，它的出现并不是用来替代OOP(Object Oriented Programming)的，而是基于OOP(Object Oriented Programming)基础之上新的编程思想。
+面向切面编程，通俗一点说，就是指将某段代码动态的切入到指定方法的指定位置进行运行的编程方式。
+举个例子，假设我们有加减乘除四个方法，并且要在每个方法运行的时候添加日志记录，有以下几种做法：
+1.直接编写在方法内部；
+public class NumberUtil { public static int add(int i, int j) { System.out.println("运行add..，参数是" + i + "," + j); int result = i + j; System.out.println("运行add..，结果是" + result); return result; } public static int sub(int i, int j) { System.out.println("运行sub..，参数是" + i + "," + j); int result = i - j; System.out.println("运行sub..，结果是" + result); return result; } public static int mul(int i, int j) { System.out.println("运行mul..，参数是" + i + "," + j); int result = i * j; System.out.println("运行mul..，结果是" + result); return result; } public static int div(int i, int j) { System.out.println("运行div..，参数是" + i + "," + j); int result = i / j; System.out.println("运行div..，结果是" + result); return result; } }加减乘除是业务核心逻辑，添加日志记录只是系统的辅助功能，直接将日志记录编写在方法内部，导致业务核心逻辑和系统辅助功能代码耦合，代码可读性差，并且修改维护麻烦，所以不推荐这么做。'><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="frameworks"><meta property="article:published_time" content="2023-09-07T16:04:48+02:00"><meta property="article:modified_time" content="2023-09-07T16:04:48+02:00"><meta property="og:image" content="/cover.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="/cover.png"><meta name=twitter:title content="Spring AOP"><meta name=twitter:description content='一、什么是AOP？ AOP(Aspect Oriented Programming)指的是面向切面编程，它的出现并不是用来替代OOP(Object Oriented Programming)的，而是基于OOP(Object Oriented Programming)基础之上新的编程思想。
+面向切面编程，通俗一点说，就是指将某段代码动态的切入到指定方法的指定位置进行运行的编程方式。
+举个例子，假设我们有加减乘除四个方法，并且要在每个方法运行的时候添加日志记录，有以下几种做法：
+1.直接编写在方法内部；
+public class NumberUtil { public static int add(int i, int j) { System.out.println("运行add..，参数是" + i + "," + j); int result = i + j; System.out.println("运行add..，结果是" + result); return result; } public static int sub(int i, int j) { System.out.println("运行sub..，参数是" + i + "," + j); int result = i - j; System.out.println("运行sub..，结果是" + result); return result; } public static int mul(int i, int j) { System.out.println("运行mul..，参数是" + i + "," + j); int result = i * j; System.out.println("运行mul..，结果是" + result); return result; } public static int div(int i, int j) { System.out.println("运行div..，参数是" + i + "," + j); int result = i / j; System.out.println("运行div..，结果是" + result); return result; } }加减乘除是业务核心逻辑，添加日志记录只是系统的辅助功能，直接将日志记录编写在方法内部，导致业务核心逻辑和系统辅助功能代码耦合，代码可读性差，并且修改维护麻烦，所以不推荐这么做。'><meta name=twitter:site content="@getdoks"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"/","name":"Keep Thinking, Keep Loving.","position":1},{"@type":"ListItem","item":"/frameworks/","name":"Frameworks","position":2},{"@type":"ListItem","item":"/frameworks/spring/","name":"Spring","position":3},{"@type":"ListItem","item":"/frameworks/spring/spring_basic/","name":"Spring基础","position":4},{"@type":"ListItem","name":"Spring Aop","position":5}]}</script></head><body class="single section frameworks" data-bs-spy=scroll data-bs-target=#toc data-bs-root-margin="0px 0px -60%" data-bs-smooth-scroll=true tabindex=0><div class=sticky-top><header class="navbar navbar-expand-lg"><div class=container-fluid><a class="navbar-brand me-auto me-lg-3" href=/>Lay-z's Blog</a>
+<button type=button id=searchToggleMobile class="btn btn-link nav-link mx-2 d-lg-none" aria-label="Search website">
+<svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+</button>
+<button class="btn btn-link d-lg-none" type=button data-bs-toggle=offcanvas data-bs-target=#offcanvasNavSection aria-controls=offcanvasNavSection aria-label="Open section navigation menu">
+<svg class="icon icon-tabler icon-tabler-dots-vertical" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 102 0 1 1 0 10-2 0"/><path d="M12 19m-1 0a1 1 0 102 0 1 1 0 10-2 0"/><path d="M12 5m-1 0a1 1 0 102 0 1 1 0 10-2 0"/></svg></button><div class="offcanvas offcanvas-start d-lg-none" tabindex=-1 id=offcanvasNavSection aria-labelledby=offcanvasNavSectionLabel><div class=offcanvas-header><h5 class=offcanvas-title id=offcanvasNavSectionLabel>Frameworks</h5><button type=button class="btn btn-link nav-link p-0 ms-auto" data-bs-dismiss=offcanvas aria-label=Close>
+<svg class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg></button></div><div class=offcanvas-body><aside class="doks-sidebar mt-n3"><nav id=doks-docs-nav aria-label="Tertiary navigation"><nav class="section-nav docs-links"><ul class=list-unstyled><li><details open open><summary>Spring基础</summary><ul class="list-unstyled list-nested"><li><a href=/frameworks/spring/spring_basic/spring-basic/>Spring框架概述</a></li><li class=active><a aria-current=page href=/frameworks/spring/spring_basic/spring-aop/>Spring AOP</a></li><li><a href=/frameworks/spring/spring_basic/spring-transcationc/>声明式事务</a></li></ul></details></li><li><details open><summary>Spring源码</summary><ul class="list-unstyled list-nested"><li><a href=/frameworks/spring/spring_resource/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0-/>Spring源码解析</a></li></ul></details></li></ul></nav></nav></aside></div></div><button class="btn btn-link nav-link mx-2 order-3 d-lg-none" type=button data-bs-toggle=offcanvas data-bs-target=#offcanvasNavMain aria-controls=offcanvasNavMain aria-label="Open main navigation menu">
+<svg class="icon icon-tabler icon-tabler-menu" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="4" y1="8" x2="20" y2="8"/><line x1="4" y1="16" x2="20" y2="16"/></svg></button><div class="offcanvas offcanvas-end h-auto" tabindex=-1 id=offcanvasNavMain aria-labelledby=offcanvasNavMainLabel><div class=offcanvas-header><h5 class=offcanvas-title id=offcanvasNavMainLabel>Lay-z's Blog</h5><button type=button class="btn btn-link nav-link p-0 ms-auto" data-bs-dismiss=offcanvas aria-label=Close>
+<svg class="icon icon-tabler icon-tabler-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg></button></div><div class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between"><ul class="navbar-nav flex-grow-1"><li class=nav-item><a class=nav-link href=/>编程基础</a></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# role=button data-bs-toggle=dropdown aria-expanded=false>Java&amp;JVM<svg class="icon icon-tabler icon-tabler-chevron-down" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6 6-6"/></svg></a><ul class="dropdown-menu shadow rounded border-0"><li><a class=dropdown-item href=/java_core/java_core/>Java核心</a></li><li><a class=dropdown-item href=/java_core/jvm/>JVM</a></li></ul></li><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href=# role=button data-bs-toggle=dropdown aria-expanded=false>应用框架与生态<svg class="icon icon-tabler icon-tabler-chevron-down" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6 6-6"/></svg></a><ul class="dropdown-menu shadow rounded border-0"><li><a class=dropdown-item href=/frameworks/spring_mvc/>Spring MVC</a></li><li><a class=dropdown-item href=/>Spring</a></li></ul></li></ul><button type=button id=searchToggleDesktop class="btn btn-link nav-link p-2 d-none d-lg-block" aria-label="Search website">
+<svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+</button>
+<button id=buttonColorMode class="btn btn-link mx-auto nav-link p-0 ms-lg-2 me-lg-1" type=button aria-label="Toggle theme">
+<svg data-bs-theme-value="dark" class="icon icon-tabler icon-tabler-moon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3c.132.0.263.0.393.0a7.5 7.5.0 007.92 12.446A9 9 0 1112 2.992z"/></svg>
+<svg data-bs-theme-value="light" class="icon icon-tabler icon-tabler-sun" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-4 0a4 4 0 108 0 4 4 0 10-8 0m-5 0h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m12.1-.7-.7.7m0 11.4.7.7m-12.1-.7-.7.7"/></svg></button><ul id=socialMenu class="nav mx-auto flex-row order-lg-4"><li class=nav-item><a class="nav-link social-link" href=/><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg><small class="ms-2 visually-hidden">GitHub</small></a></li></ul></div></div></div></header></div><div class=modal id=searchModal tabindex=-1 aria-labelledby=searchModalLabel aria-hidden=true><div class="modal-dialog modal-dialog-scrollable modal-fullscreen-md-down"><div class=modal-content><div class=modal-header><h1 class="modal-title fs-5 visually-hidden" id=searchModalLabel>Search</h1><button type=button class="btn-close visually-hidden" data-bs-dismiss=modal aria-label=Close></button><div class="search-input flex-grow-1 d-none"><form id=search-form class=search-form action=# method=post accept-charset=UTF-8 role=search><label for=query class=visually-hidden>Search</label><div class=d-flex><input type=search id=query name=query class="search-text form-control form-control-lg" placeholder=Search aria-label=Search maxlength=128 autocomplete=off>
+<button type=button class="btn btn-link text-decoration-none px-0 ms-3 d-md-none" data-bs-dismiss=modal aria-label=Close>Cancel</button></div></form></div></div><div class=modal-body><p class="search-loading status message d-none mt-3 text-center">Loading search index…</p><p class="search-no-recent message d-none mt-3 text-center">No recent searches</p><p class="search-no-results message d-none mt-3 text-center">No results for "<strong><span class=query-no-results>Query here</span></strong>"</p><div id=searchResults class=search-results></div><template><article class="search-result list-view"><div class="card my-3"><div class=card-body><header><h2 class="h5 title title-submitted mb-0"><a class="stretched-link text-decoration-none text-reset" href=#>Title here</a></h2><div class="submitted d-none"><time class=created-date>Date here</time></div></header><div class=content>Summary here</div></div></div></article></template></div><div class=modal-footer><ul class="list-inline me-auto d-none d-md-block"><li class=list-inline-item><kbd class=me-2><svg width="15" height="15" aria-label="Enter key" role="img"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"><path d="M12 3.53088v3c0 1-1 2-2 2H4m3 3-3-3 3-3"/></g></svg></kbd><span class=DocSearch-Label>to select</span></li><li class=list-inline-item><kbd class=me-2><svg width="15" height="15" aria-label="Arrow down" role="img"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"><path d="M7.5 3.5v8m3-3-3 3-3-3"/></g></svg></kbd><kbd class=me-2><svg width="15" height="15" aria-label="Arrow up" role="img"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"><path d="M7.5 11.5v-8m3 3-3-3-3 3"/></g></svg></kbd><span class=DocSearch-Label>to navigate</span></li><li class=list-inline-item><kbd class=me-2><svg width="15" height="15" aria-label="Escape key" role="img"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"><path d="M13.6167 8.936c-.1065.3583-.6883.962-1.4875.962-.7993.0-1.653-.9165-1.653-2.1258v-.5678c0-1.2548.7896-2.1016 1.653-2.1016s1.3601.4778 1.4875 1.0724M9 6c-.1352-.4735-.7506-.9219-1.46-.8972-.7092.0246-1.344.57-1.344 1.2166s.4198.8812 1.3445.9805C8.465 7.3992 8.968 7.9337 9 8.5s-.454 1.398-1.4595 1.398C6.6593 9.898 6 9 5.963 8.4851m-1.4748.5368c-.2635.5941-.8099.876-1.5443.876s-1.7073-.6248-1.7073-2.204v-.4603c0-1.0416.721-2.131 1.7073-2.131.9864.0 1.6425 1.031 1.5443 2.2492h-2.956"/></g></svg></kbd><span class=DocSearch-Label>to close</span></li></ul><p class=d-md-none>Search by <a class=text-decoration-none href=https://github.com/nextapps-de/flexsearch>FlexSearch</a></p></div></div></div></div><div class="wrap container-fluid" role=document><div class=content><div class="row flex-xl-nowrap"><div class="col-lg-5 col-xl-4 docs-sidebar d-none d-lg-block"><nav class="section-nav docs-links"><ul class=list-unstyled><li><details open open><summary>Spring基础</summary><ul class="list-unstyled list-nested"><li><a href=/frameworks/spring/spring_basic/spring-basic/>Spring框架概述</a></li><li class=active><a aria-current=page href=/frameworks/spring/spring_basic/spring-aop/>Spring AOP</a></li><li><a href=/frameworks/spring/spring_basic/spring-transcationc/>声明式事务</a></li></ul></details></li><li><details open><summary>Spring源码</summary><ul class="list-unstyled list-nested"><li><a href=/frameworks/spring/spring_resource/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0-/>Spring源码解析</a></li></ul></details></li></ul></nav></div><div class="col container-fw d-lg-flex flex-lg-row justify-content-center mx-auto"><nav class="docs-toc d-none d-xl-block col-xl-3" aria-label="Secondary navigation"><div class=page-links><h3>On this page</h3><nav id=toc><ul><li><a href=#一什么是aop>一、什么是AOP？</a></li><li><a href=#二aop中的专业术语>二、AOP中的专业术语</a></li><li><a href=#三aop的操作>三、AOP的操作</a><ul><li><a href=#1-aop的使用步骤>1. AOP的使用步骤</a></li><li><a href=#2-aop的使用细节>2. AOP的使用细节</a><ul><li><a href=#21-ioc容器中保存的组件是代理对象>2.1 IOC容器中保存的组件是代理对象</a></li><li><a href=#22-切入点表达式写法>2.2 切入点表达式写法</a></li><li><a href=#23-通知方法的执行顺序>2.3 通知方法的执行顺序</a></li><li><a href=#24-获取目标方法的各种信息>2.4 获取目标方法的各种信息</a></li><li><a href=#25-环绕通知>2.5 环绕通知</a></li><li><a href=#26-多切面运行顺序>2.6 多切面运行顺序</a></li></ul></li></ul></li><li><a href=#四aop的使用场景>四、AOP的使用场景</a></li></ul></nav></div></nav><main class="docs-content col-lg-11 col-xl-9"><h1>Spring AOP</h1><nav class="toc-mobile d-xl-none" aria-label="Quaternary navigation"><details><summary>On this page</summary><div class=page-links><nav id=TableOfContents><ul><li><a href=#一什么是aop>一、什么是AOP？</a></li><li><a href=#二aop中的专业术语>二、AOP中的专业术语</a></li><li><a href=#三aop的操作>三、AOP的操作</a><ul><li><a href=#1-aop的使用步骤>1. AOP的使用步骤</a></li><li><a href=#2-aop的使用细节>2. AOP的使用细节</a><ul><li><a href=#21-ioc容器中保存的组件是代理对象>2.1 IOC容器中保存的组件是代理对象</a></li><li><a href=#22-切入点表达式写法>2.2 切入点表达式写法</a></li><li><a href=#23-通知方法的执行顺序>2.3 通知方法的执行顺序</a></li><li><a href=#24-获取目标方法的各种信息>2.4 获取目标方法的各种信息</a></li><li><a href=#25-环绕通知>2.5 环绕通知</a></li><li><a href=#26-多切面运行顺序>2.6 多切面运行顺序</a></li></ul></li></ul></li><li><a href=#四aop的使用场景>四、AOP的使用场景</a></li></ul></nav></div></details></nav><h1 id=一什么是aop>一、什么是AOP？</h1><p><code>AOP(Aspect Oriented Programming)</code>指的是面向切面编程，它的出现并不是用来替代<code>OOP(Object Oriented Programming)</code>的，而是基于<code>OOP(Object Oriented Programming)</code>基础之上新的编程思想。</p><p>面向切面编程，通俗一点说，就是指将某段代码动态的切入到指定方法的指定位置进行运行的编程方式。</p><p>举个例子，假设我们有加减乘除四个方法，并且要在每个方法运行的时候添加日志记录，有以下几种做法：</p><p>1.直接编写在方法内部；</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>public class NumberUtil {
+
+    public static int add(int i, int j) {
+        System.out.println(&#34;运行add..，参数是&#34; + i + &#34;,&#34; + j);
+        int result = i + j;
+        System.out.println(&#34;运行add..，结果是&#34; + result);
+        return result;
+    }
+
+    public static int sub(int i, int j) {
+        System.out.println(&#34;运行sub..，参数是&#34; + i + &#34;,&#34; + j);
+        int result = i - j;
+        System.out.println(&#34;运行sub..，结果是&#34; + result);
+        return result;
+    }
+
+    public static int mul(int i, int j) {
+        System.out.println(&#34;运行mul..，参数是&#34; + i + &#34;,&#34; + j);
+        int result = i * j;
+        System.out.println(&#34;运行mul..，结果是&#34; + result);
+        return result;
+    }
+
+    public static int div(int i, int j) {
+        System.out.println(&#34;运行div..，参数是&#34; + i + &#34;,&#34; + j);
+        int result = i / j;
+        System.out.println(&#34;运行div..，结果是&#34; + result);
+        return result;
+    }
+}</code></pre></figure></div><p>加减乘除是业务核心逻辑，添加日志记录只是系统的辅助功能，直接将日志记录编写在方法内部，导致业务核心逻辑和系统辅助功能代码耦合，代码可读性差，并且修改维护麻烦，所以不推荐这么做。</p><p>2.写一个工具类，在方法内部调用工具类</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>public class NumberUtil {
+
+    public static int add(int i, int j) {
+        LogUtil.logStart(i,j);
+        int result = i + j;
+        LogUtil.logEnd(i,j);
+        return result;
+    }
+
+    public static int sub(int i, int j) {
+        LogUtil.logStart(i,j);
+        int result = i - j;
+        LogUtil.logEnd(i,j);
+        return result;
+    }
+
+    public static int mul(int i, int j) {
+        LogUtil.logStart(i,j);
+        int result = i * j;
+        LogUtil.logEnd(i,j);
+        return result;
+    }
+
+    public static int div(int i, int j) {
+        LogUtil.logStart(i,j);
+        int result = i / j;
+        LogUtil.logEnd(i,j);
+        return result;
+    }
+}
+
+public class LogUtil {
+
+    public static void logStart(Object...objects) {
+        System.out.println(&#34;运行&#34; + Arrays.asList(objects));
+    }
+
+    public static void logEnd(Object...objects) {
+        System.out.println(&#34;结束运行&#34; + Arrays.asList(objects));
+    }
+}</code></pre></figure></div><p>写工具类的好处是如果需要修改日志的输出，只需要改日志工具类即可，但是这种方式日志记录和业务逻辑代码还是耦合，而且可能很多功能都需要调用<code>LogUtil</code>，需要考虑不同业务的兼容性问题。</p><p>3.采用动态代理的方式</p><p>采用动态代理的意思是，假设我们有一个<code>NumberUtil</code>类的代理对象，我们通过代理对象去执行<code>NumberUtil</code>的加减乘除方法，就可以在方法前后做其他操作，而且不会影响<code>NumberUtil</code>类中本身的业务逻辑。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>public interface BaseNumberUtil {
+
+    public int add(int i, int j);
+
+    public int sub(int i, int j);
+
+    public int mul(int i, int j);
+
+    public int div(int i, int j);
+
+}
+
+public class NumberUtil implements BaseNumberUtil{
+
+    @Override
+    public int add(int i, int j) {
+        return i + j;
+    }
+
+    @Override
+    public int sub(int i, int j) {
+        return i - j;
+    }
+
+    @Override
+    public int mul(int i, int j) {
+        return i * j;
+    }
+
+    @Override
+    public int div(int i, int j) {
+        return i / j;
+    }
+
+
+}
+
+public class LogUtil {
+
+    public static void logStart(Method method, Object... args) {
+        System.out.println(method.getName() + &#34;方法开始执行，传入的参数是&#34; + Arrays.asList(args));
+    }
+
+    public static void logEnd(Method method, Object... result) {
+        System.out.println(method.getName() + &#34;方法执行结束，返回的结果是&#34; + Arrays.asList(result));
+    }
+
+    public static void logException(Method method, Exception e) {
+        System.out.println(method.getName() + &#34;方法执行异常，异常信息是&#34; + e.getCause());
+    }
+
+    public static void logFinally(Method method) {
+        System.out.println(method.getName() + &#34;方法执行结束&#34;);
+    }
+}
+
+/**
+ * 帮NumberUtil.java生成代理对象
+ */
+public class NumberUtilProxy {
+
+    /**
+     * 为传入的参数创建一个代理对象
+     *
+     * @param numberUtil 被代理的对象
+     * @return
+     */
+    public static BaseNumberUtil getProxy(final BaseNumberUtil numberUtil){
+
+        // 被代理对象的类加载器
+        ClassLoader loader = numberUtil.getClass().getClassLoader();
+        // 对象所实现的所有接口
+        Class&lt;?&gt;[] interfaces = numberUtil.getClass().getInterfaces();
+        // 方法执行器，帮我们目标对象执行方法
+        InvocationHandler h = new InvocationHandler() {
+            /**
+             * @param proxy 代理对象，给jdk使用，任和时候都不要懂这个对象
+             * @param method 当前将要执行的目标对象的方法
+             * @param args 这个方法调用时外界传入的参数值
+             * @return
+             * @throws Throwable
+             */
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                Object result = null;
+                try {
+                    LogUtil.logStart(method,args);
+                    // 利用反射执行目标方法
+                    result = method.invoke(numberUtil, args);
+                    LogUtil.logEnd(method,result);
+                } catch (Exception e){
+                    LogUtil.logException(method,e);
+                } finally {
+                    LogUtil.logFinally(method);
+                }
+                // result是目标方法执行后的返回值，将目标方法执行结果返回,只有将执行结果返回出去，外界才能拿到真正执行后的返回值
+                return result;
+            }
+        };
+
+        // Proxy为目标对象创建代理对象，这个方法是jdk的，直接用，作用就是为目标对象创建代理对象
+        return (BaseNumberUtil) Proxy.newProxyInstance(loader,interfaces,h);
+    }
+}
+
+public class TestNumberUtilProxy {
+
+    @Test
+    public void test(){
+
+        BaseNumberUtil numberUtil = new NumberUtil();
+
+        // 拿到了NumberUtil的代理对象，这个代理对象最终也会去调用NumberUtil的加减乘除方法
+        BaseNumberUtil proxy = NumberUtilProxy.getProxy(numberUtil);
+
+         /**
+         * add方法开始执行，传入的参数是[1, 2]
+         * add方法执行结束，返回的结果是[3]
+         * add方法执行结束
+         */
+        proxy.add(1,2);
+        /**
+         * sub方法开始执行，传入的参数是[1, 2]
+         * sub方法执行结束，返回的结果是[-1]
+         * sub方法执行结束
+         */
+        proxy.sub(1,2);
+        /**
+         * mul方法开始执行，传入的参数是[2, 3]
+         * mul方法执行结束，返回的结果是[6]
+         * mul方法执行结束
+         */
+        proxy.mul(2,3);
+        /**
+         * div方法开始执行，传入的参数是[2, 0]
+         * div方法执行异常，异常信息是java.lang.ArithmeticException: / by zero
+         * div方法执行结束
+         */
+        proxy.div(2,0);
+    }
+
+}</code></pre></figure></div><p>用动态代理，日志记录可以做的非常强大，而且与业务逻辑解耦。但是动态代理存在两个问题。</p><p>第一个问题，动态代理写起来很复杂，不同的业务需要创建不同的代理类；</p><p>第二个问题，jdk默认的动态代理，如果目标对象没有实现任何接口，是无法为他创建代理对象的。我们在创建代理的时候，传入了一个参数<code>interfaces</code>，这个参数是对象所实现的所有接口，代理对象也实现了被代理对象实现的接口，换句话说，代理对象和被代理对象唯一产生的关联是实现了同一个接口。所以，如果目标对象没有实现任何接口，就无法为他创建代理对象。</p><p>Spring为了解决动态代理上述的两个问题，产生了AOP，AOP底层就是动态代理。我们可以利用Spring一句代码都不写的去创建动态代理。AOP实现简单，而且不要求目标对象必须实现某个接口。</p><h1 id=二aop中的专业术语>二、AOP中的专业术语</h1><p>以给方法添加日志为例，如果不给方法添加日志，正常情况下，方法会直接运行业务逻辑直至结束。但是我们想要在方法开始前，方法结束后，方法出现异常，方法完全结束的地方添加日志。</p><p>**横切关注点：**方法不同的位置就是我们的横切关注点。</p><p>**通知方法：**业务逻辑方法不同位置调用的日志记录方法就是通知方法。</p><p>**切面类：**写了通知方法的类，就叫做切面类。</p><p>**连接点：**每一个方法的每一个位置都是一个连接点，切面类的方法和业务逻辑方法可以在连接点建立连接。</p><p>**切入点：**可能我们只需要在方法异常的时候记录日志，并不是每一个点都记录日志。我们真正需要执行日志记录的地方就叫做切入点。</p><p>**切入点表达式：**在众多连接点中选出我们感兴趣的地方。就好比sql语句，从众多数据中选出我们需要的一些数据。</p><h1 id=三aop的操作>三、AOP的操作</h1><h2 id=1-aop的使用步骤>1. AOP的使用步骤<a href=#1-aop的使用步骤 class=anchor aria-hidden=true>#</a></h2><p>上面介绍了手动编写动态代理的方式实现切面编程，那么如何使用Spring将切面类<code>LogUtil</code>中的通知方法动态的在目标方法运行的各个位置切入呢？我们的目标是在没有自己编写动态代理的情况下，让Spring替我们实现将日志记录插入到方法运行的不同位置。</p><p>第一步：导包</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>// Spring基础包
+spring-expression-5.2.6.RELEASE.jar
+spring-core-5.2.6.RELEASE.jar
+spring-context-5.2.6.RELEASE.jar
+spring-beans-5.2.6.RELEASE.jar
+spring-aop-5.2.6.RELEASE.jar
+commons-logging-1.2.jar
+// Spring支持面向切面编程的包——基础版
+spring-aspects-5.2.3.RELEASE.jar
+// Spring支持面向切面编程的包——增强版(即使目标对象没有实现任何接口，也可以实现动态代理)
+com.springsource.org.aspectj.weaver-1.7.2.RELEASE.jar
+aopalliance-1.0-sources.jar
+cglib-nodep-javadoc-2.2.jar</code></pre></figure></div><p>第二步：写配置</p><p>1.将目标类和切面类(封装了通知方法(在目标方法执行前后执行的方法)的类)加入到<code>IOC</code>容器中</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>&lt;!--开启组件扫描--&gt;
+&lt;context:component-scan base-package=&#34;com.ysy&#34;&gt;&lt;/context:component-scan&gt;</code></pre></figure></div><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@Component
+public class LogUtil {}
+
+@Component
+public class NumberUtil implements BaseNumberUtil{}</code></pre></figure></div><p>2.告诉Spring，哪个是切面类</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@Component
+@Aspect // 告诉Spring，这个类是切面类
+public class LogUtil {}</code></pre></figure></div><p>3.告诉Spring，通知方法要在何时何地运行</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@Component
+@Aspect // 告诉Spring，这个类是切面类
+public class LogUtil {
+
+    /**
+     * 告诉Spring，每个方法都什么时候运行
+     * @Before          前置通知
+     * @After()         后置通知
+     * @AfterReturning  返回通知
+     * @AfterThrowing   异常通知
+     * @Around()        环绕通知
+     */
+    // 目标方法开始执行之前执行
+    // execution是固定写法，如果你的方法有参数，这里必须也写参数类型，否则找不到该方法
+    @Before(&#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(int,int))&#34;)
+    public static void logStart() {
+        System.out.println(&#34;方法开始执行，传入的参数是&#34;);
+    }
+
+    // 目标方法正常执行结束，拿到返回结果的时候执行
+    @AfterReturning(&#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(int,int))&#34;)
+    public static void logEnd() {
+        System.out.println(&#34;方法执行结束，返回的结果是&#34;);
+    }
+
+    // 目标方法发生异常之后执行
+    @AfterThrowing(&#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(int,int))&#34;)
+    public static void logException() {
+        System.out.println(&#34;方法执行异常，异常信息是&#34;);
+    }
+
+    // 目标方法执行结束之后执行
+    @After(&#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(int,int))&#34;)
+    public static void logFinally() {
+        System.out.println(&#34;方法执行结束&#34;);
+    }
+}</code></pre></figure></div><p>4.开启基于注解的AOP功能</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>&lt;!--开启基于注解的AOP功能--&gt;
+&lt;aop:aspectj-autoproxy&gt;&lt;/aop:aspectj-autoproxy&gt;</code></pre></figure></div><p>第三步：测试</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>public class TestNumberUtilProxy {
+
+    ApplicationContext context = new ClassPathXmlApplicationContext(&#34;applicatioonContext.xml&#34;);
+
+    @Test
+    public void test(){
+        /**
+         * 从IOC容器中拿到目标对象
+         * 这里为什么不用new，因为只有从容器中拿的对象才是受容器管理的，才能使用容器强大的功能
+         * 如果要用类型获取对象，一定要使用接口类型，不能使用本类
+         */
+        BaseNumberUtil bean = context.getBean(BaseNumberUtil.class);
+        /**
+        * logStart——XXX方法开始执行，传入的参数是
+		* logFinally——XXX方法执行结束
+		* logEnd——XXX方法执行结束，返回的结果是
+        */
+        bean.add(1,2);
+    }
+
+}</code></pre></figure></div><h2 id=2-aop的使用细节>2. AOP的使用细节<a href=#2-aop的使用细节 class=anchor aria-hidden=true>#</a></h2><h3 id=21-ioc容器中保存的组件是代理对象>2.1 IOC容器中保存的组件是代理对象<a href=#21-ioc容器中保存的组件是代理对象 class=anchor aria-hidden=true>#</a></h3><p>我们从IOC容器中拿到目标对象，然后打印目标对象，会发现打印的是<code>com.ysy.learn.common.util.NumberUtil@53aad5d5</code>，接着打印目标对象的类型，发现打印的是<code>class com.sun.proxy.$Proxy21</code>，也就是说，容器中保存的组件不是<code>NumberUtil</code>本身，而是它的代理对象<code>$Proxy21</code>。这也侧面反应了AOP的底层实现是动态代理。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>public void test(){
+    /**
+    * 从IOC容器中拿到目标对象
+    * 这里为什么不用new，因为只有从容器中拿的对象才是受容器管理的，才能使用容器强大的功能
+    * 如果要用类型获取对象，一定要使用接口类型，不能使用本类
+    */
+    BaseNumberUtil bean = context.getBean(BaseNumberUtil.class);
+    // com.ysy.learn.common.util.NumberUtil@53aad5d5
+    System.out.println(bean);
+    // class com.sun.proxy.$Proxy21
+    System.out.println(bean.getClass());
+    bean.add(1,2);
+}</code></pre></figure></div><p>为什么说如果要用类型获取对象，一定要使用接口类型获取，不能使用本类获取呢？</p><p>因为容器中保存的组件不是<code>NumberUtil</code>本身，而是它的代理对象<code>$Proxy21</code>，很显然，<code>NumberUtil</code>和<code>$Proxy21</code>不是同一个对象，使用本类<code>NumberUtil</code>获取，就会报如下错误：</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>NoSuchBeanDefinitionException: No qualifying bean of type &#39;com.ysy.learn.common.util.NumberUtil&#39; available</code></pre></figure></div><p>而代理对象与目标对象唯一的关联就是他俩都实现了同一个接口，所以我们在用类型获取对象的时候，一定要使用接口类型，不能使用本类。</p><p>我们的接口<code>BaseNumberUtil</code>上面并没有添加Spring创建对象的注解，说明<code>BaseNumberUtil</code>没有加入Spring容器中，那我们为什么还能从Spring容器中获取到对象呢？</p><p>Spring会在容器中找已存在的组件，然后看哪一个组件是<code>BaseNumberUtil</code>类型。<code>NumberUtil</code>和<code>LogUtil</code>都是容器中已经存在的组件，但是<code>NumberUtil</code>实现了<code>BaseNumberUtil</code>接口，所以很显然<code>NumberUtil</code>是<code>BaseNumberUtil</code>类型，所以可以获取到对象。</p><p>为什么不在<code>BaseNumberUtil</code>接口上面添加注解，让<code>BaseNumberUtil</code>也加入Spring容器中呢？</p><p>实际上，<code>BaseNumberUtil</code>接口也可以添加创建对象的注解，而且即使加了注解，Spring也不会去为接口创建对象(无法为接口创建对象)。在接口上添加创建对象的注解，相当于告诉Spring，IOC容器中可能有这种类型的组件。</p><p>当然，只有某个类需要被动态切入其他方法，才会给这个类创建代理对象，如果我们没有切面类，就意味着这个类不需要被切入，就不会创建代理对象，所以此时获取到的对象类型就是他本身的类型。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@Component
+//Aspect // 注释切面类的注解，就不存在切面类
+public class LogUtil {}
+
+public void test(){
+
+    BaseNumberUtil bean = context.getBean(BaseNumberUtil.class);
+    // com.ysy.learn.common.util.NumberUtil@2145b572
+    System.out.println(bean);
+    // class com.ysy.learn.common.util.NumberUtil
+    System.out.println(bean.getClass());
+    bean.add(1,2);
+}</code></pre></figure></div><p>上述方式中，<code>NumberUtil</code>实现了<code>BaseNumberUtil</code>接口，我们在上面说过，AOP的增强包，即使目标对象没有实现任何接口，也可以实现动态代理。现在我们还是创建<code>NumberUtil</code>，不实现<code>BaseNumberUtil</code>接口，然后直接用<code>NumberUtil</code>本类在容器中获取对象，查看这个对象的类型，发现当前对象的类型是<code>com.ysy.learn.common.util.NumberUtil$$EnhancerBySpringCGLIB$$36a3457f</code>，这意味着我们拿到的类型是<code>NumberUtil</code>，然后CGLIB帮我们在这个类中创建了一个内部类<code>EnhancerBySpringCGLIB</code>，这个内部类实现了<code>NumberUtil</code>的所有方法，这个内部类就是<code>NumberUtil</code>的代理对象。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>/**
+* NumberUtil没有实现BaseNumberUtil接口，我们还是使用LogUtil作为切面类
+*/
+@Component
+public class NumberUtil /*implements BaseNumberUtil*/{
+
+    //@Override
+    public int add(int i, int j) {
+        return i + j;
+    }
+
+    //@Override
+    public int sub(int i, int j) {
+        return i - j;
+    }
+
+    //@Override
+    public int mul(int i, int j) {
+        return i * j;
+    }
+
+    //@Override
+    public int div(int i, int j) {
+        return i / j;
+    }
+
+}
+
+/**
+* 测试是否打印日志信息，并且查看拿到的目标对象的Class
+*/
+public void test1(){
+
+    NumberUtil bean = context.getBean(NumberUtil.class);
+    // com.ysy.learn.common.util.NumberUtil@437da279
+    System.out.println(bean);
+    // class com.ysy.learn.common.util.NumberUtil$$EnhancerBySpringCGLIB$$36a3457f
+    System.out.println(bean.getClass());
+    // logStart——XXX方法开始执行，传入的参数是
+	// logFinally——XXX方法执行结束
+	// logEnd——XXX方法执行结束，返回的结果是
+    bean.add(1,2);
+}</code></pre></figure></div><h3 id=22-切入点表达式写法>2.2 切入点表达式写法<a href=#22-切入点表达式写法 class=anchor aria-hidden=true>#</a></h3><p>切入点表达式的固定格式：execution(访问权限符 返回值类型 方法全类名(参数列表))</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@AfterReturning(&#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(int,int))&#34;)
+public static void logEnd() {
+    System.out.println(&#34;logEnd——XXX方法执行结束，返回的结果是&#34;);
+}</code></pre></figure></div><p>*****：</p><ol><li><p>匹配一个或多个字符：<code>execution(public int com.ysy.learn.common.util.Number*.*(int,int))</code></p></li><li><p>匹配任意一个参数：<code>execution(public int com.ysy.learn.common.util.Number*.*(int,*))</code></p></li><li><p>如果*放在路径中，只能匹配一层路径：<code>execution(public int com.ysy.learn.common.*.Number*.*(int,*))</code></p></li><li><p>*不能放在访问权限符的位置，如果要表示任意权限，访问权限符可以不写(public可选，private也切不了)</p></li></ol><p><strong>..</strong>：</p><ol><li><p>匹配任意多个，任意类型参数：<code>execution(public int com.ysy.learn.common.util.Number*.*(..))</code></p></li><li><p>匹配多层路径：<code>execution(public int com.ysy.learn.common..Number*.*(int,*))</code></p></li></ol><p>最精确的写法：<code>execution(public int com.ysy.learn.common.util.NumberUtil.add(int,int))</code></p><p>最模糊的写法：<code>execution(* *.*(..))</code></p><p><strong>&&、||、！</strong>：</p><ol><li><p>&&：必须同时满足两个表达式<code>execution(* *.*(..)) && execution(* NumberUtil.*(..))</code></p></li><li><p>||：满足其中一个即可<code>execution(* *.*(..)) || execution(* NumberUtil.*(..))</code></p></li><li><p>!：只要不是表达式中的方法，都做切入</p></li></ol><h3 id=23-通知方法的执行顺序>2.3 通知方法的执行顺序<a href=#23-通知方法的执行顺序 class=anchor aria-hidden=true>#</a></h3><p>不同的注解表示执行的位置如下所示：</p><p>如果方法正常，执行的顺序是：@Before(前置通知)——>@After(后置通知)——> @AfterReturning(正常返回)</p><p>方法异常，执行的顺序是：@Before(前置通知)——>@After(后置通知)——> @AfterThrowing(方法异常)</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>try{
+    @Before
+    method.invoke(obj,args)
+    @AfterReturning
+} catch {
+    @AfterThrowing
+} finally {
+    @After
+}</code></pre></figure></div><h3 id=24-获取目标方法的各种信息>2.4 获取目标方法的各种信息<a href=#24-获取目标方法的各种信息 class=anchor aria-hidden=true>#</a></h3><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>
+@Component
+@Aspect // 告诉Spring，这个类是切面类
+public class LogUtil {
+
+    /**
+     * 告诉Spring，每个方法都什么时候运行
+     *
+     * @Before 前置通知
+     * @After() 后置通知
+     * @AfterReturning 返回通知
+     * @AfterThrowing 异常通知
+     * @Around() 环绕通知
+     */
+    // 目标方法开始执行之前执行
+    // execution是固定写法，如果你的方法有参数，这里必须也写参数类型，否则找不到该方法
+    @Before(&#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(int,int))&#34;)
+    public static void logStart(JoinPoint joinPoint) {
+        // 获取目标方法的参数
+        Object[] args = joinPoint.getArgs();
+        // 获取目标方法的签名
+        Signature signature = joinPoint.getSignature();
+        String method = signature.getName();
+        System.out.println(&#34;logStart——&#34; + method + &#34;方法开始执行，传入的参数是&#34; + Arrays.asList(args));
+    }
+
+    // 目标方法正常执行结束，拿到返回结果的时候执行，用returning告诉Spring，result是用来接收方法返回结果的
+    @AfterReturning(value = &#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(int,int))&#34;, returning = &#34;result&#34;)
+    // 这里的方法返回值类型如果我们写了int，就接不到其他类型的返回值
+    public static void logEnd(JoinPoint joinPoint, Object result) {
+        // 获取目标方法的签名
+        Signature signature = joinPoint.getSignature();
+        String method = signature.getName();
+        System.out.println(&#34;logEnd——&#34; + method + &#34;方法执行结束，返回的结果是&#34; + result);
+    }
+
+    // 目标方法发生异常之后执行，用throwing告诉Spring，e是用来接收方法返回异常的
+    // 注意这里的Exception指定方法接收哪一种异常，如果我们这里写的NullPointerException，就接不到其他异常
+    @AfterThrowing(value = &#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(int,int))&#34;, throwing = &#34;e&#34;)
+    public static void logException(JoinPoint joinPoint, Exception e) {
+        // 获取目标方法的签名
+        Signature signature = joinPoint.getSignature();
+        String method = signature.getName();
+        System.out.println(&#34;logException——&#34; + method + &#34;方法执行异常，异常信息是&#34;);
+    }
+
+    // 目标方法执行结束之后执行
+    @After(&#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(int,int))&#34;)
+    public static void logFinally(JoinPoint joinPoint) {
+        // 获取目标方法的签名
+        Signature signature = joinPoint.getSignature();
+        String method = signature.getName();
+        System.out.println(&#34;logFinally——&#34; + method + &#34;方法执行结束&#34;);
+    }
+}</code></pre></figure></div><p><strong>补充内容：Spring对通知方法的约束</strong></p><p>为什么我们在通知方法<code>logEnd()</code>随便加了一个<code>Object result</code>参数就可以接收到方法的返回值？</p><p>首先，Spring对通知方法的约束不严格，通知方法中我们写不写<code>static</code>，返回值是<code>void</code>还是其他类型，访问权限是<code>public</code>还是<code>private</code>都不会影响通知方法的执行，唯一会影响的是通知方法的参数列表。因为通知方法是Spring通过反射调用的，每次调用通知方法，Spring都要确定这个方法参数列表的值，所以Spring得知道方法的每一个参数代表了什么。像<code>JoinPoint</code>，是Spring自己的接口，所以它肯定认识，我们加了一个<code>Object result</code>，如果不告诉Spring这个<code>result</code>代表什么，Spring不认识这个<code>result</code>，就会报错，正是因为我们用<code>returning = "result"</code>告诉了Spring，<code>result</code>是用来接收方法返回值的，所以Spring可以正确的将方法返回值给到<code>result</code>。</p><p><strong>补充内容：抽取可重用的切入点表达式</strong></p><p>我们在每一个通知方法上面都写了切入点表达式，可能很多方法上面的切入点表达式是一样的，后续如果想修改表达式，不方便修改。那么如何将所有相同的切入点表达式抽取出来，实现重用呢？</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>// 1. 声明一个没有实现的返回void的空方法
+// 2. 在方法上用@Pointcut注解，写上需要重用的切入点表达式
+@Pointcut(value = &#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(..))&#34;)
+public void executionCommon(){};
+
+// 3. 在通知方法切入点表达式的位置，直接写声明的空方法的方法名
+@AfterThrowing(value = &#34;executionCommon()&#34;, throwing = &#34;e&#34;)
+public static void logException(JoinPoint joinPoint, Exception e) {
+    // 获取目标方法的签名
+    Signature signature = joinPoint.getSignature();
+    String method = signature.getName();
+    System.out.println(&#34;logException——&#34; + method + &#34;方法执行异常，异常信息是&#34;+ e);
+}</code></pre></figure></div><h3 id=25-环绕通知>2.5 环绕通知<a href=#25-环绕通知 class=anchor aria-hidden=true>#</a></h3><p>环绕通知是Spring中最强大的通知，将前置通知、返回通知、后置通知、异常通知四合一就是环绕通知，环绕通知就相当于我们的动态代理。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>
+@Component
+@Aspect // 告诉Spring，这个类是切面类
+public class LogUtil {
+
+    /**
+     * @param pjp JoinPoint的子接口，可以拿到目标方法的各种信息
+     * @return
+     * @throws Throwable
+     */
+    @Around(value = &#34;executionCommon()&#34;)
+    public static Object logAround(ProceedingJoinPoint pjp) throws Throwable {
+        Object proceed = null;
+        String name = &#34;&#34;;
+        try {
+            name = pjp.getSignature().getName();
+            Object[] args = pjp.getArgs();
+            // 这个相当于@Before
+            System.out.println(&#34;[环绕前置]&#34; + name + &#34;开始执行，参数是&#34; + Arrays.asList(args));
+            // 这个方法就相当于method.invoke(obj,args),返回的值就是调用的目标方法的返回值
+            proceed = pjp.proceed(args);
+            // 这个相当于@AfterReturning
+            System.out.println(&#34;[返回通知]&#34; + name + &#34;执行正常结束，结果是&#34; + proceed);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+            // 这个相当于@AfterThrowing
+            System.out.println(&#34;[异常通知]&#34; + name + &#34;执行异常，异常信息是&#34; + e);
+        } finally {
+            // 这个相当于@After
+            System.out.println(&#34;[环绕后置]&#34; + name + &#34;最终结束&#34;);
+        }
+
+        // 将目标方法的返回值返回出去，外界才能接得到
+        return proceed;
+    }
+
+    @Pointcut(value = &#34;execution(public int com.ysy.learn.common.util.NumberUtil.*(..))&#34;)
+    public void executionCommon() {
+    }
+
+}</code></pre></figure></div><p><strong>补充内容：如果环绕通知和普通通知同时开启，它们的执行顺序是什么样的？</strong></p><p>从例子中可以看出环绕通知的执行顺序是优先于普通通知的。而且如果方法出现异常，环绕通知可以捕捉到异常信息，普通通知会认为方法正常结束，因为环绕通知中已经把异常捕捉了，到普通通知时，没有接收到异常，所以为了让普通通知接收到异常，需要<code>throw new RuntimeException(e)</code>。</p><p>环绕通知因为相当于动态代理，所以它可以修改参数，修改返回结果等，可以影响到目标方法，但是普通通知不会影响到目标方法，所以一般如果只是记录日志，建议用普通通知，如果确定需要影响目标方法的逻辑等，就用环绕通知。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@Test
+public void test1(){
+  果要用类型获取对象，一定要使用接口类型，不能使用本类
+
+    NumberUtil bean = context.getBean(NumberUtil.class);
+    /*
+        [环绕前置]add开始执行，参数是[1, 2]
+        logStart——add方法开始执行，传入的参数是[1, 2]
+        [环绕返回通知]add执行正常结束，结果是3
+        [环绕后置]add最终结束
+        logFinally——add方法执行结束
+        logEnd——add方法执行结束，返回的结果是3
+     */
+    bean.add(1,2);
+    System.out.println(&#34;----------------------------&#34;);
+    /*
+    	[环绕前置]div开始执行，参数是[1, 0]
+		logStart——div方法开始执行，传入的参数是[1, 0]
+		[环绕异常通知]div执行异常，异常信息是java.lang.ArithmeticException: / by zero
+		[环绕后置]div最终结束
+		logFinally——div方法执行结束
+		logEnd——div方法执行结束，返回的结果是null
+    */
+    bean.div(1,0);
+}</code></pre></figure></div><h3 id=26-多切面运行顺序>2.6 多切面运行顺序<a href=#26-多切面运行顺序 class=anchor aria-hidden=true>#</a></h3><p>多切面意思就是有多个切面类同时切入目标方法。所以除了<code>LogUtil</code>切面类，我们再写一个切面类<code>CheckUtil</code>，让这两个类同时切入<code>NumberUtil</code>类中的方法。**注意：**如果要在类中使用另一个类的切入点表达式，只需要写抽取的切入点表达式方法的全签名<code>com.ysy.learn.common.LogUtil.executionCommon()</code>即可。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@Component
+@Aspect // 告诉Spring，这个类是切面类
+public class CheckUtil {
+
+    @Before(&#34;com.ysy.learn.common.LogUtil.executionCommon()&#34;)
+    public static void logStart(JoinPoint joinPoint) {
+        // 获取目标方法的参数
+        Object[] args = joinPoint.getArgs();
+        // 获取目标方法的签名
+        Signature signature = joinPoint.getSignature();
+        String method = signature.getName();
+        System.out.println(&#34;[CheckUtil---]logStart——&#34; + method + &#34;方法开始执行，传入的参数是&#34; + Arrays.asList(args));
+    }
+
+    // 目标方法正常执行结束，拿到返回结果的时候执行
+    @AfterReturning(value = &#34;com.ysy.learn.common.LogUtil.executionCommon()&#34;, returning = &#34;result&#34;)
+    public static void logEnd(JoinPoint joinPoint, Object result) {
+        // 获取目标方法的签名
+        Signature signature = joinPoint.getSignature();
+        String method = signature.getName();
+        System.out.println(&#34;[CheckUtil---]logEnd——&#34; + method + &#34;方法执行结束，返回的结果是&#34; + result);
+    }
+
+    // 目标方法发生异常之后执行
+    @AfterThrowing(value = &#34;com.ysy.learn.common.LogUtil.executionCommon()&#34;, throwing = &#34;e&#34;)
+    public static void logException(JoinPoint joinPoint, Exception e) {
+        // 获取目标方法的签名
+        Signature signature = joinPoint.getSignature();
+        String method = signature.getName();
+        System.out.println(&#34;[CheckUtil---]logException——&#34; + method + &#34;方法执行异常，异常信息是&#34; + e);
+    }
+
+    // 目标方法执行结束之后执行
+    @After(&#34;com.ysy.learn.common.LogUtil.executionCommon()&#34;)
+    public static void logFinally(JoinPoint joinPoint) {
+        // 获取目标方法的签名
+        Signature signature = joinPoint.getSignature();
+        String method = signature.getName();
+        System.out.println(&#34;[CheckUtil---]logFinally——&#34; + method + &#34;方法执行结束&#34;);
+    }
+
+}</code></pre></figure></div><p>两个切面类同时切入<code>NumberUtil</code>类中的方法，之后进行测试，发现输出的日志如下：先进来的切面类后出，后进来的切面类方法先出。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@Test
+public void test1(){
+
+    NumberUtil bean = context.getBean(NumberUtil.class);
+
+    /*
+    	[CheckUtil---]logStart——add方法开始执行，传入的参数是[1, 2]
+		[LogUtil---]logStart——add方法开始执行，传入的参数是[1, 2]
+		[LogUtil---]logFinally——add方法执行结束
+		[LogUtil---]logEnd——add方法执行结束，返回的结果是3
+		[CheckUtil---]logFinally——add方法执行结束
+		[CheckUtil---]logEnd——add方法执行结束，返回的结果是3
+    */
+    bean.add(1,2);
+
+}</code></pre></figure></div><p>先进后出，后进先出是什么意思呢？</p><p>大概就是如图所示，<code>NumberUtil</code>的方法运行的时候，首先被<code>CheckUtil</code>切入，之后被<code>LogUtil</code>切入，之后执行<code>NumberUtil</code>的方法，方法执行完之后，后切入的<code>LogUtil</code>先执行结束，之后先切入的<code>CheckUtil</code>执行结束。</p><p>为什么是先执行<code>CheckUtil</code>，而不是先执行<code>LogUtil</code>呢？</p><p>这个默认是根据累的首字母判断的，<code>CheckUtil</code>的首字母<code>C</code>在<code>LogUtil</code>首字母<code>L</code>之前，所以先执行<code>CheckUtil</code>，不过可以手动设置他们的执行顺序。在切面类上用注解<code>@Order</code>可以设置切面类的执行顺序。进行如下设置之后，<code>LogUtil</code>就会先执行。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@Component
+@Aspect // 告诉Spring，这个类是切面类
+@Order(1)
+public class LogUtil {}
+
+@Component
+@Aspect // 告诉Spring，这个类是切面类
+@Order(2)
+public class CheckUtil {}</code></pre></figure></div><p>如果切面类中既有普通通知，又有环绕通知，那么执行顺序是怎样的？</p><p>按照之前的理解，环绕通知要执行方法，所以应该是先执行两个切面类的前置通知，接着执行环绕通知，最后执行两个切面类的后置通知或异常通知。但是实际上不是这样，他的执行顺序还是按照先进后出的规则，前置通知—><code>CheckUtil</code>的后置通知—><code>CheckUtil</code>的返回通知—><code>LogUtil</code>的环绕通知—><code>LogUtil</code>的后置通知—><code>LogUtil</code>的返回通知。因为这个环绕通知是<code>LogUtil</code>的环绕通知，和<code>CheckUtil</code>没有关系，所以它不会穿插在<code>CheckUtil</code>的普通通知之间。所以说，环绕通知只会影响当前切面。</p><div class=expressive-code><figure class="frame not-content"><figcaption class=header><span class=title></span></figcaption><pre tabindex=0><code>@Test
+public void test1(){
+
+    NumberUtil bean = context.getBean(NumberUtil.class);
+
+    /*
+		[LogUtil---][环绕前置]add开始执行，参数是[1, 2]
+		[LogUtil---]logStart——add方法开始执行，传入的参数是[1, 2]
+		[CheckUtil---]logStart——add方法开始执行，传入的参数是[1, 2]
+		---方法内部执行---
+		[CheckUtil---]logFinally——add方法执行结束
+		[CheckUtil---]logEnd——add方法执行结束，返回的结果是3
+		[LogUtil---][环绕返回通知]add执行正常结束，结果是3
+		[LogUtil---][环绕后置]add最终结束
+		[LogUtil---]logFinally——add方法执行结束
+		[LogUtil---]logEnd——add方法执行结束，返回的结果是3
+    */
+    bean.add(1,2);
+
+}</code></pre></figure></div><h1 id=四aop的使用场景>四、AOP的使用场景</h1><ol><li><p>AOP加日志保存到数据库</p></li><li><p>做权限验证</p></li><li><p>AOP做安全检查</p></li><li><p>AOP做事务控制</p></li></ol><div class="page-footer-meta d-flex flex-column flex-md-row justify-content-between"></div><div class="page-nav d-flex flex-column flex-sm-row"><div class="card w-100"><div class="card-body d-flex"><div class="d-flex flex-column justify-content-center"><svg class="icon icon-tabler icon-tabler-arrow-left" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12h14"/><path d="M5 12l6 6"/><path d="M5 12l6-6"/></svg></div><div class="d-flex flex-column"><div class=text-body-secondary>Prev</div><a href=/frameworks/spring/spring_basic/spring-basic/ class="stretched-link text-reset text-decoration-none">Spring框架概述</a></div></div></div><div class=m-2></div><div class="card text-end w-100"><div class="card-body d-flex justify-content-end"><div class="d-flex flex-column"><div class=text-body-secondary>Next</div><a href=/frameworks/spring/spring_basic/spring-transcationc/ class="stretched-link text-reset text-decoration-none">声明式事务</a></div><div class="d-flex flex-column justify-content-center"><svg class="icon icon-tabler icon-tabler-arrow-right" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12h14"/><path d="M13 18l6-6"/><path d="M13 6l6 6"/></svg></div></div></div></div></main></div></div></div></div><footer class="footer text-muted"><div class=container-fluid><div class=row><div class="col-lg-8 text-center text-lg-start"><ul class=list-inline><li class=list-inline-item><a class=text-muted href=/privacy/>Privacy Policy</a></li></ul></div><div class="col-lg-8 text-center text-lg-end"><ul class=list-inline><li class=list-inline-item>Brought to you by <a class=text-muted href=https://thulite.io/>Thulite</a></li></ul></div></div></div></footer><script async src=/js/app.19b73e0182301dd61c9211c2f6890104740e2eb9eb12fe4ba8d4f31435b22ed6.js integrity="sha256-Gbc+AYIwHdYckhHC9okBBHQOLrnrEv5LqNTzFDWyLtY="></script><script async src=/js/flexsearch.5dd6433c29c3e043627f046054aed58ff3790f58fdb8423f45125bbafdcad335.js integrity="sha256-XdZDPCnD4ENifwRgVK7Vj/N5D1j9uEI/RRJbuv3K0zU="></script><script async src=/js/search-modal.96e662d8f691fe25c859a3437074b485f2d7bed0bca612725028c6cf4322e2f2.js integrity="sha256-luZi2PaR/iXIWaNDcHS0hfLXvtC8phJyUCjGz0Mi4vI="></script></body></html>

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Keep thinking, keep loving. on Lay-z's Blog</title><link>/</link><description>Recent content in Keep thinking, keep loving. on Lay-z's Blog</description><generator>Hugo</generator><language>en</language><copyright>Copyright (c) 2020-2024 Thulite</copyright><lastBuildDate>Thu, 07 Sep 2023 17:19:07 +0200</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>Spring框架概述</title><link>/frameworks/spring/spring_basic/spring-basic/</link><pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate><guid>/frameworks/spring/spring_basic/spring-basic/</guid><description>&lt;p&gt;一、Spring概述&lt;/p&gt;
+&lt;p&gt;什么是框架？框架就是多个可重用模块的集合，形成一个某个领域的整体解决&lt;/p&gt;
+&lt;p&gt;Spring框架是一个开源的容器框架。为什么叫容器？因为Spring可以管理所有的组件(类)。&lt;/p&gt;
+&lt;p&gt;Spring的jar包三个为一组，javadoc中包含相关文档，sources是Spring源码&lt;/p&gt;
+&lt;p&gt;Spring的优良特性&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;非侵入式：基于Spring开发的应用中的对象可以不依赖于Spring的API&lt;/li&gt;
+&lt;li&gt;依赖注入：DI，IOC最经典的实现&lt;/li&gt;
+&lt;li&gt;面向切面编程：AOP&lt;/li&gt;
+&lt;li&gt;容器：Spring是一个容器，因为它包含并且管理应用对象的生命周期&lt;/li&gt;
+&lt;li&gt;组件化：Spring实现了使用简单的组件配置组合成一个复杂的应用，在Spring中可以使用XML和Java注解组合这些对象&lt;/li&gt;
+&lt;li&gt;一站式：在IOC和AOP的基础上可以整合各种企业应用的开源框架和第三方类库。从前到后，从页面到数据库都有支持&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;二、Spring的模块划分&lt;/p&gt;
+&lt;p&gt;Spring框架采用分层架构，根据不同的功能被划分成了多个模块，这些模块可以满足一切企业级应用开发的需求，在开发过程中可以根据需求有选择性地使用所需要的模块。&lt;/p&gt;
+&lt;p&gt;Test：Spring的单元测试&lt;/p&gt;
+&lt;p&gt;spring-test-5.2.6.RELEASE.jar&lt;/p&gt;
+&lt;p&gt;Core Container：
+核心容器IOC，这些功能由以下jar包组成，如果要使用这部分功能，需要把这些jar包全部导入&lt;/p&gt;
+&lt;p&gt;spring-beans-5.2.6.RELEASE.jar
+spring-core-5.2.6.RELEASE.jar
+spring-context-5.2.6.RELEASE.jar
+spring-expression-5.2.6.RELEASE.jar&lt;/p&gt;</description></item><item><title>Spring AOP</title><link>/frameworks/spring/spring_basic/spring-aop/</link><pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate><guid>/frameworks/spring/spring_basic/spring-aop/</guid><description>&lt;h1 id="一什么是aop"&gt;一、什么是AOP？&lt;/h1&gt;
+&lt;p&gt;&lt;code&gt;AOP(Aspect Oriented Programming)&lt;/code&gt;指的是面向切面编程，它的出现并不是用来替代&lt;code&gt;OOP(Object Oriented Programming)&lt;/code&gt;的，而是基于&lt;code&gt;OOP(Object Oriented Programming)&lt;/code&gt;基础之上新的编程思想。&lt;/p&gt;
+&lt;p&gt;面向切面编程，通俗一点说，就是指将某段代码动态的切入到指定方法的指定位置进行运行的编程方式。&lt;/p&gt;
+&lt;p&gt;举个例子，假设我们有加减乘除四个方法，并且要在每个方法运行的时候添加日志记录，有以下几种做法：&lt;/p&gt;
+&lt;p&gt;1.直接编写在方法内部；&lt;/p&gt;
+
+
+
+&lt;div class="expressive-code"&gt;
+ &lt;figure class="frame not-content"&gt;
+ &lt;figcaption class="header"&gt;
+ &lt;span class="title"&gt;&lt;/span&gt;
+ &lt;/figcaption&gt;
+ &lt;pre tabindex="0"&gt;&lt;code&gt;public class NumberUtil {
+
+ public static int add(int i, int j) {
+ System.out.println(&amp;#34;运行add..，参数是&amp;#34; + i + &amp;#34;,&amp;#34; + j);
+ int result = i + j;
+ System.out.println(&amp;#34;运行add..，结果是&amp;#34; + result);
+ return result;
+ }
+
+ public static int sub(int i, int j) {
+ System.out.println(&amp;#34;运行sub..，参数是&amp;#34; + i + &amp;#34;,&amp;#34; + j);
+ int result = i - j;
+ System.out.println(&amp;#34;运行sub..，结果是&amp;#34; + result);
+ return result;
+ }
+
+ public static int mul(int i, int j) {
+ System.out.println(&amp;#34;运行mul..，参数是&amp;#34; + i + &amp;#34;,&amp;#34; + j);
+ int result = i * j;
+ System.out.println(&amp;#34;运行mul..，结果是&amp;#34; + result);
+ return result;
+ }
+
+ public static int div(int i, int j) {
+ System.out.println(&amp;#34;运行div..，参数是&amp;#34; + i + &amp;#34;,&amp;#34; + j);
+ int result = i / j;
+ System.out.println(&amp;#34;运行div..，结果是&amp;#34; + result);
+ return result;
+ }
+}&lt;/code&gt;&lt;/pre&gt;
+ &lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;加减乘除是业务核心逻辑，添加日志记录只是系统的辅助功能，直接将日志记录编写在方法内部，导致业务核心逻辑和系统辅助功能代码耦合，代码可读性差，并且修改维护麻烦，所以不推荐这么做。&lt;/p&gt;</description></item><item><title>声明式事务</title><link>/frameworks/spring/spring_basic/spring-transcationc/</link><pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate><guid>/frameworks/spring/spring_basic/spring-transcationc/</guid><description>&lt;p&gt;在学习声明式事务之前，我们先回忆一下什么是事务：&lt;a href="https://www.cnblogs.com/mark5/p/11076623.html"&gt;【什么是事务】&lt;/a&gt;。既然是事务，就免不了要操作数据库，Spring提供了JdbcTemplate，可以快捷的操作数据库。&lt;/p&gt;
+&lt;h1 id="一jdbctemplate"&gt;一、JdbcTemplate&lt;/h1&gt;
+&lt;p&gt;JdbcTemplate是Spring提供的进行数据访问的工具，想要使用JdbcTemplate，首先需要导入以下三个Jar包：&lt;/p&gt;
+
+
+
+&lt;div class="expressive-code"&gt;
+ &lt;figure class="frame not-content"&gt;
+ &lt;figcaption class="header"&gt;
+ &lt;span class="title"&gt;&lt;/span&gt;
+ &lt;/figcaption&gt;
+ &lt;pre tabindex="0"&gt;&lt;code&gt;spring-jdbc-5.2.6.RELEASE.jar
+spring-orm-5.2.6.RELEASE.jar // 对象关系映射
+spring-tx-5.2.6.RELEASE.jar // 事务&lt;/code&gt;&lt;/pre&gt;
+ &lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;Jar包导入之后，怎么使用JdbcTemplate来操作数据库呢？&lt;/p&gt;
+&lt;p&gt;访问数据库，首先需要知道数据源，我们可以通过new的方式获取dataSource和JdbcTemplate，然后使用JdbcTemplate中的增删改查方法即可。&lt;/p&gt;
+
+
+
+&lt;div class="expressive-code"&gt;
+ &lt;figure class="frame not-content"&gt;
+ &lt;figcaption class="header"&gt;
+ &lt;span class="title"&gt;&lt;/span&gt;
+ &lt;/figcaption&gt;
+ &lt;pre tabindex="0"&gt;&lt;code&gt; public void test() throws SQLException, PropertyVetoException {
+ JdbcTemplate jdbcTemplate = new JdbcTemplate();
+ ComboPooledDataSource dataSource = new ComboPooledDataSource();
+ dataSource.setUser(&amp;#34;&amp;#34;);
+ dataSource.setPassword(&amp;#34;&amp;#34;);
+ dataSource.setJdbcUrl(&amp;#34;&amp;#34;);
+ dataSource.setDriverClass(&amp;#34;&amp;#34;);
+
+ jdbcTemplate.setDataSource(dataSource);
+ }&lt;/code&gt;&lt;/pre&gt;
+ &lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;另外一种方式，就是在Spring容器中注册dataSource和JdbcTemplate，我们要使用JdbcTemplate的时候，直接去Spring容器中取，之后再使用JdbcTemplate中的增删改查方法来操作数据库。&lt;/p&gt;</description></item><item><title>Example Post</title><link>/blog/example-post/</link><pubDate>Thu, 07 Sep 2023 16:27:22 +0200</pubDate><guid>/blog/example-post/</guid><description>You can use blog posts for announcing product updates and features.</description></item><item><title>虚拟机</title><link>/java_core/jvm/virtual_machine/virtual-machine/</link><pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate><guid>/java_core/jvm/virtual_machine/virtual-machine/</guid><description>&lt;h1 id="section-1"&gt;什么是虚拟机？&lt;/h1&gt;
+&lt;h1 id="chapter-1"&gt;一、虚拟机&lt;/h1&gt;
+&lt;h2 id="section-1-1"&gt;1. 什么是虚拟机？&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;虚拟机(Virtual Machine)指通过软件模拟的具有完整硬件系统功能的、运行在一个完全隔离环境中的完整计算机系统。&lt;/li&gt;
+&lt;li&gt;所谓虚拟机，就是一台虚拟的计算机。它是一款软件，用来执行一系列虚拟计算机指令。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="section-1-2"&gt;2. 虚拟机可以分为两类：&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;系统虚拟机：它们完全是对物理计算机的仿真，提供了一个可运行完整操作系统的软件平台，比如Visual Box，VMware。&lt;/li&gt;
+&lt;li&gt;程序虚拟机：专门为执行单个计算机程序而设计，比如Java虚拟机，在Java虚拟机中执行的指令称为Java字节码指令。
+无论是系统虚拟机还是程序虚拟机，在上面运行的软件都被限制于虚拟机提供的资源中。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id="chapter-2"&gt;二、Java虚拟机&lt;/h1&gt;
+&lt;h2 id="section-2-1"&gt;1. 什么是Java虚拟机？&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Java虚拟机是一台执行字节码的虚拟计算机，它拥有独立的运行机制，其运行的Java字节码也未必由Java语言编译而成。&lt;/li&gt;
+&lt;li&gt;JVM平台的各种语言可以共享Java虚拟机带来的跨平台性、优秀的垃圾回收机制，以及可靠的即时编译器。&lt;/li&gt;
+&lt;li&gt;Java技术的核心就是Java虚拟机，因为所有的Java程序都运行在Java虚拟机内部。
+&lt;strong&gt;可以这样理解:&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;JVM类似于一台小电脑运行在windows或者linux这些操作系统环境下。它与操作系统直接交互，不与硬件直接交互，操作系统可以帮我们完成和硬件交互的工作。&lt;/li&gt;
+&lt;li&gt;JVM不是只支持Java字节码，只要编程语言能够遵循字节码文件的规范，都可以在JVM内运行
+     
+
+&lt;img
+ src="/1592291665856-8bc51ef9-6ee7-4408-9343-3ef1aa7372dd_319100819319602114_hu_22beb13e41938c8f.webp"
+ width="1705"
+ height="315"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-0"
+&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="section-2-2"&gt;2. Java虚拟机是干什么的？&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Java虚拟机就是二进制字节码的运行环境，负责装载字节码到其内部，解释/编译为对应平台上的机器指令执行。&lt;/li&gt;
+&lt;li&gt;每一条Java指令，Java虚拟机规范中都有详细的定义，如怎么取操作数，怎么处理操作数，操作结果放在哪里。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="section-2-3"&gt;3. Java虚拟机的主要特点&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;一次编译，到处运行&lt;/li&gt;
+&lt;li&gt;自动内存管理&lt;/li&gt;
+&lt;li&gt;自动垃圾回收机制
+&lt;strong&gt;&amp;ldquo;一次编译，到处运行&amp;quot;怎么理解？&lt;/strong&gt;
+对于不同的操作系统，Oracle提供了不同版本的JVM，所以只需要将程序编译成一个.class文件，就可以运行在不同操作系统的JVM上
+
+
+&lt;img
+ src="/1592291938421-f47f0246-9e23-46e4-98ef-d642dc9d0ecd_9415740850356539932_hu_4d77ddbcd375a312.webp"
+ width="936"
+ height="543"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-1"
+&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="section-2-4"&gt;4. 指令集架构模型&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;基于栈的指令集架构&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;设计和实现更简单，适用于资源受限的系统；&lt;/li&gt;
+&lt;li&gt;避开了寄存器的分配难题：使用&lt;strong&gt;零地址指令&lt;/strong&gt;方式分配；&lt;/li&gt;
+&lt;li&gt;JVM指令流中的指令大部分是零地址指令，其执行过程依赖于操作栈。指令集更小，编译器容易实现；&lt;/li&gt;
+&lt;li&gt;不需要硬件支持，可移植性更好，更好实现跨平台。
+由于跨平台性的设计，Java的指令都是根据栈来设计的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;基于寄存器的指令集架构&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;典型的应用是X86的二进制指令集：比如传统的PC以及Android的Davlik虚拟机；&lt;/li&gt;
+&lt;li&gt;基于寄存器的指令集架构则完全依赖硬件，可移植性差；&lt;/li&gt;
+&lt;li&gt;性能优秀，执行更高效；&lt;/li&gt;
+&lt;li&gt;花费更少的指令去完成一项操作；&lt;/li&gt;
+&lt;li&gt;大部分情况下，基于寄存器架构的指令集往往都以&lt;strong&gt;一地址指令&lt;/strong&gt;、&lt;strong&gt;二地址指令&lt;/strong&gt;和&lt;strong&gt;三地址指令&lt;/strong&gt;为主&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;二者区别：举例说明
+ 
+
+&lt;img
+ src="/1592292964453-ba574a07-3d16-4688-b2a5-363318ee2861_4299550262335268628_hu_14cf74460b18abfa.webp"
+ width="1333"
+ height="781"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-2"
+&gt;
+&lt;strong&gt;寄存器执行性能更好，为什么不更改成根据寄存器来设计？&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;不同平台CPU架构不同，为了实现跨平台性，所以不能设计为基于寄存器的；&lt;/li&gt;
+&lt;li&gt;基于栈设计实现要简单一些；&lt;/li&gt;
+&lt;li&gt;基于栈在非资源受限平台(嵌入式)也是可以用的，没有必要更改。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="section-2-5"&gt;5. JVM的生命周期&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;启动&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Java虚拟机的启动是通过引导类加载器(bootstrap class loader)创建一个初始类(initial class)来完成的，这个类是由虚拟机的具体实现(虚拟机有不同公司开发的不同的版本)指定的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;执行&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;一个运行中的Java虚拟机有着一个清晰的任务：执行Java程序；&lt;/li&gt;
+&lt;li&gt;程序开始执行时他才运行，程序结束时他就停止；&lt;/li&gt;
+&lt;li&gt;执行一个所谓的Java程序的时候，真真正正在执行的是一个叫做Java虚拟机的进程。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;退出&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;程序正常执行结束；&lt;/li&gt;
+&lt;li&gt;程序在执行过程中遇到了异常(未被捕获)或错误而异常终止；&lt;/li&gt;
+&lt;li&gt;由于操作系统出现错误而导致Java虚拟机进程终止；&lt;/li&gt;
+&lt;li&gt;某线程调用Runtime类或System类的exit方法，或Runtime类的halt方法，并且Java安全管理也允许这次exit或halt操作。&lt;/li&gt;
+&lt;li&gt;JNI加载或卸载Java虚拟机，Java虚拟机退出&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="section-2-6"&gt;6. JVM整体结构&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;整体结构图
+
+
+&lt;img
+ src="/1592293238440-5c0e5309-8c0f-4380-9b5c-9f17197371ee_8685009371071052695_hu_220652c16a3ea774.webp"
+ width="1057"
+ height="954"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-3"
+&gt;&lt;/li&gt;
+&lt;li&gt;详细结构图
+
+
+&lt;img
+ src="/1592293272780-92417562-dfae-46ef-8f03-b09c94471282_17732531737385754454_hu_fdde68c71d327fc0.webp"
+ width="1222"
+ height="1245"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-4"
+&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>类加载系统</title><link>/java_core/jvm/classloader/classloader/</link><pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate><guid>/java_core/jvm/classloader/classloader/</guid><description>&lt;h2 id="1-类装载器子系统"&gt;1. 类装载器子系统&lt;/h2&gt;
+&lt;h3 id="11-什么是类装载子系统"&gt;1.1 什么是类装载子系统？&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;类装载器子系统负责从文件系统或者网络中加载Class文件，Class文件在文件开头有特定的文件标识(魔数)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;类装载器子系统(ClassLoader)只负责Class文件的加载，至于它是否可以运行，则由执行引擎(Execution Engine)决定。（你妈妈[ClassLoader]给你[Execution Engine]找到相亲姑娘，是否能成得看你自己的本事）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;加载类的信息存放于一块称为方法区的内存空间。除了类的信息外，方法区中还会存放&lt;strong&gt;运行时常量池&lt;/strong&gt;信息，可能还包括字符串字面量和数字常量(这部分常量信息是Class文件中常量池部分的内存映射)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;运行时常量池：常量池在运行时加载到内存里，就叫做运行时常量池&lt;/p&gt;
+&lt;h3 id="12-类装载子系统架构图"&gt;1.2 类装载子系统架构图&lt;/h3&gt;
+&lt;h4 id="heading"&gt;    
+
+&lt;img
+ src="/1592294273696-75a39df4-8134-42cc-a2ec-171e9148974d_18275658206902580544_hu_ac57167d51750d95.webp"
+ width="1092"
+ height="446"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-0"
+&gt;&lt;/h4&gt;
+&lt;h3 id="13-类的加载过程"&gt;1.3 类的加载过程
+
+&lt;img
+ src="/1592296953006-ef0cc2eb-bcc6-4b97-9147-8996a9a93f08_12893937654689967772_hu_7cf9c9115c0a95f0.webp"
+ width="1692"
+ height="785"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-1"
+&gt;&lt;/h3&gt;
+&lt;h4 id="131-加载"&gt;1.3.1 加载&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;通过一个类的全限定名获取定义此类的二进制字节流。&lt;/p&gt;</description></item><item><title>程序计数器</title><link>/java_core/jvm/runtime_data_area/program-counter-register/</link><pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate><guid>/java_core/jvm/runtime_data_area/program-counter-register/</guid><description>&lt;h3 id="1-什么是pc寄存器程序计数器"&gt;1. 什么是PC寄存器(程序计数器)？&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;JVM中的程序计数寄存器(Program Counter Register)中，Register的命名源于CPU的寄存器，寄存器存储指令相关的现场信息。CPU只有把数据装载到寄存器才能够运行。JVM中的PC寄存器并不是广义上所指的物理寄存器，是对物理PC寄存器的一种抽象模拟。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;它是一块很小的内存空间，几乎可以忽略不计。也是运行速度最快的存储区域。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在jvm规范中，每个线程都有它自己的程序计数器，是线程私有的，生命周期与线程的生命周期保持一致。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;任何时间一个线程都只有一个方法在执行，也就是所谓的当前方法。程序计数器会存储当前线程正在执行的java方法的JVM指令地址；如果是在执行native方法，则是未指定值(undefined)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;它是程序控制流的指示器，分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;它是唯一一个在Java虚拟机规范中没有规定任何OOM情况的区域，也没有GC&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;   
+
+&lt;img
+ src="/1592303565144-6734cf1f-578f-4dcf-b4d2-04f5ccc82d2f_1104819481997742485_hu_d9cdd580366d63e3.webp"
+ width="1134"
+ height="966"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-0"
+&gt;&lt;/p&gt;
+&lt;h3 id="2-pc寄存器的作用"&gt;2. PC寄存器的作用&lt;/h3&gt;
+&lt;p&gt;PC寄存器是用来存储指向下一条指令的地址，也就是即将要执行的指令代码。由执行引擎读取下一条指令。
+
+
+&lt;img
+ src="/1592303662466-6bc2252d-87d1-4f7e-9c33-48315bf57493_15164678382221252897_hu_f5ab4327f38696d9.webp"
+ width="1738"
+ height="891"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-1"
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;|&lt;/strong&gt;  使用PC寄存器存储字节码指令地址有什么用**/**为什么使用PC寄存器记录当前线程的执行地址？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;因为CPU需要不停的切换各个线程，这时候切换回来以后，就得知道接着从哪开始继续执行。&lt;/li&gt;
+&lt;li&gt;JVM的字节码解释器就需要通过改变PC寄存器的值来明确下一条应该执行什么样的字节码指令。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;      &lt;strong&gt;|&lt;/strong&gt;  PC寄存器为什么会设定为线程私有&lt;/p&gt;</description></item><item><title>Example Reference</title><link>/frameworks/spring_mvc/example/</link><pubDate>Thu, 07 Sep 2023 16:13:18 +0200</pubDate><guid>/frameworks/spring_mvc/example/</guid><description>&lt;p&gt;Reference pages are ideal for outlining how things work in terse and clear terms. Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what your documenting.&lt;/p&gt;</description></item><item><title>Spring源码解析</title><link>/frameworks/spring/spring_resource/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0-/</link><pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate><guid>/frameworks/spring/spring_resource/spring%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0-/</guid><description/></item><item><title>Privacy Policy</title><link>/privacy/</link><pubDate>Thu, 07 Sep 2023 17:19:07 +0200</pubDate><guid>/privacy/</guid><description/></item></channel></rss>

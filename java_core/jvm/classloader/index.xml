@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Class Loader on Lay-z's Blog</title><link>/java_core/jvm/classloader/</link><description>Recent content in Class Loader on Lay-z's Blog</description><generator>Hugo</generator><language>en</language><copyright>Copyright (c) 2020-2024 Thulite</copyright><lastBuildDate>Thu, 07 Sep 2023 16:04:48 +0200</lastBuildDate><atom:link href="/java_core/jvm/classloader/index.xml" rel="self" type="application/rss+xml"/><item><title>类加载系统</title><link>/java_core/jvm/classloader/classloader/</link><pubDate>Thu, 07 Sep 2023 16:04:48 +0200</pubDate><guid>/java_core/jvm/classloader/classloader/</guid><description>&lt;h2 id="1-类装载器子系统"&gt;1. 类装载器子系统&lt;/h2&gt;
+&lt;h3 id="11-什么是类装载子系统"&gt;1.1 什么是类装载子系统？&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;类装载器子系统负责从文件系统或者网络中加载Class文件，Class文件在文件开头有特定的文件标识(魔数)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;类装载器子系统(ClassLoader)只负责Class文件的加载，至于它是否可以运行，则由执行引擎(Execution Engine)决定。（你妈妈[ClassLoader]给你[Execution Engine]找到相亲姑娘，是否能成得看你自己的本事）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;加载类的信息存放于一块称为方法区的内存空间。除了类的信息外，方法区中还会存放&lt;strong&gt;运行时常量池&lt;/strong&gt;信息，可能还包括字符串字面量和数字常量(这部分常量信息是Class文件中常量池部分的内存映射)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;运行时常量池：常量池在运行时加载到内存里，就叫做运行时常量池&lt;/p&gt;
+&lt;h3 id="12-类装载子系统架构图"&gt;1.2 类装载子系统架构图&lt;/h3&gt;
+&lt;h4 id="heading"&gt;    
+
+&lt;img
+ src="/1592294273696-75a39df4-8134-42cc-a2ec-171e9148974d_18275658206902580544_hu_ac57167d51750d95.webp"
+ width="1092"
+ height="446"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-0"
+&gt;&lt;/h4&gt;
+&lt;h3 id="13-类的加载过程"&gt;1.3 类的加载过程
+
+&lt;img
+ src="/1592296953006-ef0cc2eb-bcc6-4b97-9147-8996a9a93f08_12893937654689967772_hu_7cf9c9115c0a95f0.webp"
+ width="1692"
+ height="785"
+ decoding="async"
+ fetchpriority="auto"
+ loading="lazy"
+ alt=""
+ id="h-rh-i-1"
+&gt;&lt;/h3&gt;
+&lt;h4 id="131-加载"&gt;1.3.1 加载&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;通过一个类的全限定名获取定义此类的二进制字节流。&lt;/p&gt;</description></item></channel></rss>
